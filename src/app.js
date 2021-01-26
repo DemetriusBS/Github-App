@@ -23,7 +23,7 @@ class App extends Component {
       ajax().get(`https://api.github.com/users/${value}`)
         .then((result) => {
           this.setState({
-            userinfo:{
+            userinfo: {
               username: result.name,
               photo: result.avatar_url,
               login: result.login,
@@ -36,6 +36,21 @@ class App extends Component {
     }
   }
 
+  getRepos(type) {
+    return (e) => {
+      console.log('type: ', type)
+      ajax().get(`https://api.github.com/users/DemetriusBS/${type}`)
+        .then((result) => {
+          this.setState({
+            [type]: result.map((repo) => ({
+              name: repo.name,
+              link: repo.html_url
+            }))
+          })
+        })
+    }
+  }
+
   render() {
     return (
       <AppContent
@@ -43,11 +58,11 @@ class App extends Component {
         repos={this.state.repos}
         starred={this.state.starred}
         handleSearch={(e) => this.handleSearch(e)}
-        getRepos={() => console.log('get repos')}
-        getStarred={() => console.log('get starred')}
+        getRepos={this.getRepos('repos')}
+        getStarred={this.getRepos('starred')}
       />
     )
   }
 }
-  
+
 export default App
